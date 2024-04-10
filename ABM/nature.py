@@ -2,7 +2,7 @@ from typing import Dict, List
 import random
 
 from env import ENV
-from position import Position
+from .position import Position
 from .feader import Feader
 from .nest import Nest
 
@@ -27,19 +27,26 @@ class Nature:
         return self.nest
 
     @staticmethod
-    def random_direction(current_position: Position):
+    def random_direction(current_position: Position) -> Position:
         feasible_direction = Nature.feasible_directions(
             current_position=current_position)
 
         return random.choice(feasible_direction)
 
     @staticmethod
-    def feasible_directions(current_position: Position):
+    def surrounding_feasible_positions(position: Position) -> List[Position]:
+        feasible_directions = Nature.feasible_directions(
+            current_position=position)
+
+        return [direction + position for direction in feasible_directions]
+
+    @staticmethod
+    def feasible_directions(current_position: Position) -> List[Position]:
         return [direction for direction in DIRECTIONS if Nature.is_feasible(
             current_position + direction)]
 
     @staticmethod
-    def is_feasible(position: Position):
+    def is_feasible(position: Position) -> bool:
         boundary_x = ENV.get('NATURE_BOUNDARY_X')
         boundary_y = ENV.get('NATURE_BOUNDARY_Y')
 

@@ -1,0 +1,51 @@
+import random
+from typing import List
+
+from .ant import Ant, Status
+from .feader import Feader
+from .nest import Nest
+from .nature import Nature
+from env import ENV
+
+
+class ABS:
+    def __init__(self, ants: List[Ant], feaders: List[Feader], nest: Nest) -> None:
+        self.ants: List[Ant] = ants
+        self.feaders: List[Feader] = feaders
+        self.nest: Nest = nest
+        self.nature: Nature = Nature(self.feaders, self.nest)
+
+    def execute(self) -> int:
+        time_step = 0
+
+        while True:
+            if any([feader.unit <= 0 for feader in self.feaders]):
+                break
+
+            commited_ants: List[Ant] = []
+            position_ants_dict = {}
+            for ant in self.ants:
+                ant.go()
+                if ant.state == Status.COMMITTED:
+                    commited_ants.append(ant)
+
+                if ant.position.tuplize() in position_ants_dict:
+                    position_ants_dict[ant.position.tuplize()].append(ant)
+                else:
+                    position_ants_dict[ant.position.tuplize()] = [ant]
+
+            for ant in commited_ants:
+                surrounding_positions = [position for position in Nature.surrounding_feasible_positions(
+                    ant.position) if position in position_ants_dict]
+
+                if ant.position == ant.committed_to.position:
+                    continue
+
+                for surrounding_position in surrounding_positions:
+                    for surrounding_ant in position_ants_dict[surrounding_position]:
+                        if random.random() < ant.committed_to.recuitment_possibility:
+                            surrounding_ant.recruit()
+
+            time_step += 1
+
+        return time_step

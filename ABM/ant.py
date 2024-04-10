@@ -68,3 +68,8 @@ class Ant:
             self.head_to = HeadTo.RANDOM
             self.state = Status.UNCOMMITTED
             self.committed_to = None
+
+    def recruit(self, feader: Feader):
+        self.state = Status.COMMITTED
+        self.committed_to = feader
+        self.head_to = HeadTo.FEADER
