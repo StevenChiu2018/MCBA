@@ -1,14 +1,14 @@
 import random
-from typing import List
+from typing import List, Dict
 
 from .ant import Ant, Status
 from .feader import Feader
-from .nest import Nest
 from .nature import Nature
-from env import ENV
+from .nest import Nest
+from .position import Position
 
 
-class ABS:
+class ABM:
     def __init__(self, ants: List[Ant], feaders: List[Feader], nest: Nest) -> None:
         self.ants: List[Ant] = ants
         self.feaders: List[Feader] = feaders
@@ -23,7 +23,7 @@ class ABS:
                 break
 
             commited_ants: List[Ant] = []
-            position_ants_dict = {}
+            position_ants_dict: Dict[Position, List[Ant]] = {}
             for ant in self.ants:
                 ant.go()
                 if ant.state == Status.COMMITTED:
@@ -36,7 +36,7 @@ class ABS:
 
             for ant in commited_ants:
                 surrounding_positions = [position for position in Nature.surrounding_feasible_positions(
-                    ant.position) if position in position_ants_dict]
+                    ant.position) if position.tuplize() in position_ants_dict]
 
                 if ant.position == ant.committed_to.position:
                     continue

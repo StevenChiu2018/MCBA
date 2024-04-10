@@ -62,7 +62,7 @@ class Ant:
                 short_distance = ((self.position + direction) - destination)
 
         if self.position == destination:
-            self.head_to = (self.head_to % 2) + 1
+            self.head_to = HeadTo((self.head_to.value % 2) + 1)
 
         if random.random() < self.committed_to.attrition_possibility:
             self.head_to = HeadTo.RANDOM
