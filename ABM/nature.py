@@ -1,10 +1,10 @@
 from typing import Dict, List
-from env import ENV
 import random
 
+from env import ENV
 from position import Position
-from feader import Feader
-from nest import Nest
+from .feader import Feader
+from .nest import Nest
 
 DIRECTIONS = [Position(1, 0), Position(0, 1), Position(-1, 0), Position(0, -1),
               Position(1, 1), Position(1, -1), Position(-1, 1), Position(-1, -1)]

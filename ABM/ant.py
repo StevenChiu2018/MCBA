@@ -3,9 +3,9 @@ from enum import Enum
 from typing import Optional
 
 from env import ENV
-from feader import Feader
-from position import Position
-from nature import Nature
+from .feader import Feader
+from .position import Position
+from .nature import Nature
 
 
 class Status(Enum):
