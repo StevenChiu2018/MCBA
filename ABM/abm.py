@@ -1,5 +1,5 @@
 import random
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from .ant import Ant, Status
 from .feader import Feader
@@ -23,28 +23,27 @@ class ABM:
                 break
 
             commited_ants: List[Ant] = []
-            position_ants_dict: Dict[Position, List[Ant]] = {}
+            position_ants_dict: Dict[Tuple[int, int], List[Ant]] = {}
             for ant in self.ants:
                 ant.go()
                 if ant.state == Status.COMMITTED:
                     commited_ants.append(ant)
-
-                if ant.position.tuplize() in position_ants_dict:
-                    position_ants_dict[ant.position.tuplize()].append(ant)
                 else:
-                    position_ants_dict[ant.position.tuplize()] = [ant]
+                    if ant.position.tuplize() in position_ants_dict:
+                        position_ants_dict[ant.position.tuplize()].append(ant)
+                    else:
+                        position_ants_dict[ant.position.tuplize()] = [ant]
 
             for ant in commited_ants:
                 surrounding_positions = [position for position in Nature.surrounding_feasible_positions(
                     ant.position) if position.tuplize() in position_ants_dict]
-
-                if ant.position == ant.committed_to.position:
-                    continue
+                if ant.position.tuplize() in position_ants_dict:
+                    surrounding_positions.append(ant.position)
 
                 for surrounding_position in surrounding_positions:
-                    for surrounding_ant in position_ants_dict[surrounding_position]:
+                    for surrounding_ant in position_ants_dict[surrounding_position.tuplize()]:
                         if random.random() < ant.committed_to.recuitment_possibility:
-                            surrounding_ant.recruit()
+                            surrounding_ant.recruit(ant.committed_to)
 
             time_step += 1
 

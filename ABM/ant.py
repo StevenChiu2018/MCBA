@@ -52,7 +52,7 @@ class Ant:
 
         destination = self.committed_to.position
         if self.head_to == HeadTo.NEST:
-            self.nature.get_nest()
+            destination = self.nature.get_nest().position
 
         short_distance = max(ENV.get('NATURE_BOUNDARY_X'),
                              ENV.get('NATURE_BOUNDARY_Y'))
@@ -63,6 +63,9 @@ class Ant:
 
         if self.position == destination:
             self.head_to = HeadTo((self.head_to.value % 2) + 1)
+
+            if self.position == self.committed_to.position:
+                self.committed_to.commit()
 
         if random.random() < self.committed_to.attrition_possibility:
             self.head_to = HeadTo.RANDOM

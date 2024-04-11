@@ -1,4 +1,4 @@
-from ABM import ABM, Ant, Feader, Nature, Nest, Position
+from ABM import ABM, Ant, Feader, Nature, Nest, Position, Status
 from env import ENV
 
 ENV.load_env()
@@ -19,4 +19,18 @@ abm = ABM(ants=ants, feaders=feaders, nest=nest)
 
 result = abm.execute()
 
-print(result)
+uncommited = 0
+commit_a = 0
+commit_b = 0
+for ant in ants:
+    if ant.state == Status.UNCOMMITTED:
+        uncommited += 1
+    elif ant.committed_to == feader_a:
+        commit_a += 1
+    else:
+        commit_b += 1
+
+print('Cost: ' + str(result) + ' time steps')
+print('Uncommited: ' + str(uncommited))
+print('Commit to A: ' + str(commit_a))
+print('Commit to B: ' + str(commit_b))
