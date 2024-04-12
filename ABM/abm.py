@@ -1,11 +1,11 @@
 import random
 from typing import List, Dict, Tuple
 
+from statistic import TimeBase
 from .ant import Ant, Status
 from .feader import Feader
 from .nature import Nature
 from .nest import Nest
-from .position import Position
 
 
 class ABM:
@@ -14,6 +14,7 @@ class ABM:
         self.feaders: List[Feader] = feaders
         self.nest: Nest = nest
         self.nature: Nature = Nature(self.feaders, self.nest)
+        self.statistic: TimeBase = TimeBase(feaders=feaders)
 
     def execute(self) -> int:
         time_step = 0
@@ -45,6 +46,7 @@ class ABM:
                         if random.random() < ant.committed_to.recuitment_possibility:
                             surrounding_ant.recruit(ant.committed_to)
 
+            self.statistic.add_records(self.ants)
             time_step += 1
 
         return time_step

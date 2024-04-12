@@ -3,9 +3,9 @@ from env import ENV
 
 ENV.load_env()
 
-feader_a = Feader(position=Position(10, 40), discover_possibility=ENV.get('ALPHA_A'),
+feader_a = Feader(name='Feader A', position=Position(10, 40), discover_possibility=ENV.get('ALPHA_A'),
                   attrition_possibility=ENV.get('LAMBDA_A'), recuitment_possibility=ENV.get('BETA_A'), unit=100)
-feader_b = Feader(position=Position(40, 40), discover_possibility=ENV.get('ALPHA_B'),
+feader_b = Feader(name='Feader B', position=Position(40, 40), discover_possibility=ENV.get('ALPHA_B'),
                   attrition_possibility=ENV.get('LAMBDA_B'), recuitment_possibility=ENV.get('BETA_B'), unit=100)
 feaders = [feader_a, feader_b]
 
@@ -30,7 +30,4 @@ for ant in ants:
     else:
         commit_b += 1
 
-print('Cost: ' + str(result) + ' time steps')
-print('Uncommited: ' + str(uncommited))
-print('Commit to A: ' + str(commit_a))
-print('Commit to B: ' + str(commit_b))
+abm.statistic.draw_status()
