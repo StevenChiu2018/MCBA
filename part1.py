@@ -30,4 +30,4 @@ for ant in ants:
     else:
         commit_b += 1
 
-abm.statistic.draw_status()
+abm.statistic.draw_status_line_graph()
