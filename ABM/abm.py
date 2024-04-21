@@ -9,12 +9,13 @@ from .nest import Nest
 
 
 class ABM:
-    def __init__(self, ants: List[Ant], feaders: List[Feader], nest: Nest) -> None:
+    def __init__(self, ants: List[Ant], feaders: List[Feader], nest: Nest, need_report: bool = False) -> None:
         self.ants: List[Ant] = ants
         self.feaders: List[Feader] = feaders
         self.nest: Nest = nest
         self.nature: Nature = Nature(self.feaders, self.nest)
-        self.statistic: TimeBase = TimeBase(feaders=feaders)
+        self.statistic: TimeBase = TimeBase(
+            feaders=feaders, ant_amount=len(ants), need_report=need_report)
 
     def execute(self) -> int:
         time_step = 0
@@ -46,7 +47,8 @@ class ABM:
                         if random.random() < ant.committed_to.recuitment_possibility:
                             surrounding_ant.recruit(ant.committed_to)
 
-            self.statistic.add_records(self.ants)
+            self.statistic.add_records(self.ants, time_step=time_step)
             time_step += 1
 
+        self.statistic.close_file()
         return time_step

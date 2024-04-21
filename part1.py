@@ -15,7 +15,7 @@ nature = Nature(feaders=feaders, nest=nest)
 ants = [Ant(initial_position=Position(25, 5), nature=nature)
         for _ in range(100)]
 
-abm = ABM(ants=ants, feaders=feaders, nest=nest)
+abm = ABM(ants=ants, feaders=feaders, nest=nest, need_report=True)
 
 result = abm.execute()
 
@@ -29,5 +29,6 @@ for ant in ants:
         commit_a += 1
     else:
         commit_b += 1
+
 
 abm.statistic.draw_status_line_graph()

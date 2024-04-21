@@ -67,7 +67,7 @@ class Ant:
             if self.position == self.committed_to.position:
                 self.committed_to.commit()
 
-        if random.random() < self.committed_to.attrition_possibility:
+        if self.head_to == HeadTo.FEADER and random.random() < self.committed_to.attrition_possibility:
             self.head_to = HeadTo.RANDOM
             self.state = Status.UNCOMMITTED
             self.committed_to = None
