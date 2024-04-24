@@ -26,6 +26,7 @@ class Ant:
         self.state = Status.UNCOMMITTED
         self.position: Position = initial_position
         self.committed_to: Optional[Feader] = None
+        self.commit_method: str = "no_commit"
         self.head_to: HeadTo = HeadTo.RANDOM
 
     def go(self):
@@ -43,6 +44,7 @@ class Ant:
             feader = self.nature.get_feader(self.position)
             if random.random() < feader.discover_possibility:
                 feader.commit()
+                self.commit_method = f"directly_{feader.name}"
                 self.state = Status.COMMITTED
                 self.committed_to = feader
                 self.head_to = HeadTo.NEST
@@ -73,6 +75,7 @@ class Ant:
             self.committed_to = None
 
     def recruit(self, feader: Feader):
+        self.commit_method = f"recruited_{feader.name}"
         self.state = Status.COMMITTED
         self.committed_to = feader
         self.head_to = HeadTo.FEADER

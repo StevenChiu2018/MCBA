@@ -43,9 +43,16 @@ class ABM:
                     surrounding_positions.append(ant.position)
 
                 for surrounding_position in surrounding_positions:
+                    recruite = False
                     for surrounding_ant in position_ants_dict[surrounding_position.tuplize()]:
                         if random.random() < ant.committed_to.recuitment_possibility:
+                            recruite = True
                             surrounding_ant.recruit(ant.committed_to)
+
+                            break
+
+                    if recruite:
+                        break
 
             self.statistic.add_records(self.ants, time_step=time_step)
             time_step += 1

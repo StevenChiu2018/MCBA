@@ -17,8 +17,19 @@ class TimeBase:
         self.predictions = [{feader.name: 0 for feader in self.feaders}]
         self.ant_amount = ant_amount
         self.need_report = need_report
+        self.first_feeder = ""
+        self.feeder_amount = {feader.name: 0 for feader in self.feaders}
         if need_report:
             self.report_file = open('./reports/report', 'a')
+        self.first_commit = -1
+
+    def is_the_first_feeder_dominate(self):
+        max_amount = max(self.feeder_amount.values())
+        for key, amount in self.feeder_amount.items():
+            if amount == max_amount:
+                return self.first_feeder == key
+
+        return False
 
     def add_records(self, ants: List[Ant], time_step: int):
         cur_status = {feader.name: 0 for feader in self.feaders}
@@ -28,11 +39,16 @@ class TimeBase:
             if ant.state == Status.UNCOMMITTED:
                 cur_status['uncommitted'] += 1
             else:
+                if self.first_commit == -1:
+                    self.first_commit = time_step
+                if self.first_feeder == "":
+                    self.first_feeder = ant.committed_to.name
                 cur_status[ant.committed_to.name] += 1
+                self.feeder_amount[ant.committed_to.name] += 1
 
             if self.need_report:
                 self.report_file.write(
-                    f'{time_step} {ant.state.name} {ant.position.x} {ant.position.y}\n')
+                    f'{time_step} {ant.commit_method} {ant.state.name} {ant.position.x} {ant.position.y}\n')
 
         self.status.append(cur_status)
 

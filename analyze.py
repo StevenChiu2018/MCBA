@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import seaborn
 import time
+import math
 
 from env import ENV
 
@@ -37,13 +38,16 @@ class Analyze:
 
                 statistical[position] += 1
 
+        return self.generate_ant_distribution(statistical=statistical)
+
+    def generate_ant_distribution(self, statistical):
         ant_distribution = []
 
         for y in range(ENV.get('NATURE_BOUNDARY_Y')):
             cur_row = []
             for x in range(ENV.get('NATURE_BOUNDARY_X')):
                 if (x, y) in statistical:
-                    cur_row.append(statistical[(x, y)])
+                    cur_row.append(min(statistical[(x, y)], 90))
                 else:
                     cur_row.append(0)
             ant_distribution.append(cur_row)
@@ -66,14 +70,40 @@ class Analyze:
 
 if __name__ == '__main__':
     ENV.load_env()
-    analyze = Analyze('./reports/report')
-    for time_step in range(0, 1200, 100):
-        ant_distribution = analyze.get_ant_distribution_before(
-            time_step=time_step)
-        analyze.plot_heat_map(ant_distribution=ant_distribution,
-                              file_name=f'./part1_result/ants_distribution_{time_step}.png')
-    # for time_step in range(100, 1200, 100):
+    analyze = Analyze('./reports/normal2')
+    # for time_step in range(500, 800, 50):
+    #     ant_distribution = analyze.get_ant_distribution_before(
+    #         time_step=time_step)
+    #     analyze.plot_heat_map(ant_distribution=ant_distribution,
+    #                           file_name=f'./part1_result/too_long/ants_distribution_{time_step}.png')
+
+    # for time_step in range(600, 900, 100):
     #     ant_distribution = analyze.get_ant_distribution_before(
     #         time_step=time_step, start_at=time_step - 100)
     #     analyze.plot_heat_map(ant_distribution=ant_distribution,
-    #                           file_name=f'./part1_result/ants_distribution_{time_step - 100}-{time_step}.png')
+    #                           file_name=f'./part1_result/normal2/ants_distribution_{time_step - 100}-{time_step}.png')
+
+    # recruite_count = 0
+    # direct_count = 0
+    # for time_step in range(1, 800):
+    #     for index, info in enumerate(analyze.records[time_step]):
+    #         if analyze.records[time_step - 1][index][0] != "recruited_Feader_A" and info[0] == "recruited_Feader_A":
+    #             recruite_count += 1
+    #         if analyze.records[time_step - 1][index][0] != "directly_Feader_A" and info[0] == "directly_Feader_A":
+    #             direct_count += 1
+
+    # print(recruite_count)
+    # print(direct_count)
+
+    statistical = {}
+    for time_step in range(300, 800):
+        for index, info in enumerate(analyze.records[time_step]):
+            if info[0] == "recruited_Feader_A" or info[0] == "directly_Feader_A":
+                if not info[2] in statistical:
+                    statistical[info[2]] = 0
+
+                statistical[info[2]] = min(1, statistical[info[2]] + 1)
+
+    ant_distribution = analyze.generate_ant_distribution(statistical)
+    analyze.plot_heat_map(ant_distribution=ant_distribution,
+                          file_name='./part1_result/normal2/commit_a_location2.png')
