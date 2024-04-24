@@ -15,7 +15,7 @@ class ABM:
         self.nest: Nest = nest
         self.nature: Nature = Nature(self.feaders, self.nest)
         self.statistic: TimeBase = TimeBase(
-            feaders=feaders, ant_amount=len(ants), need_report=need_report)
+            feaders=feaders, need_report=need_report)
 
     def execute(self) -> int:
         time_step = 0
